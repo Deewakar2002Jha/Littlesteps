@@ -10,3 +10,4 @@ export { default as AdminLogin } from './admin/AdminLogin';
 export { default as AdminAppointments } from './admin/AdminAppointments';
 export { default as AdminClients } from './admin/AdminClients';
 export { default as AdminSchedule } from './admin/AdminSchedule';
+export { default as AdminSettings } from './admin/AdminSettings';

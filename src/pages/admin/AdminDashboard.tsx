@@ -10,12 +10,14 @@ import {
   Settings, 
   LogOut,
   Heart,
-  Bell
+  Bell,
+  Shield
 } from 'lucide-react';
 import AdminOverview from './AdminOverview';
 import AdminAppointments from './AdminAppointments';
 import AdminClients from './AdminClients';
 import AdminSchedule from './AdminSchedule';
+import AdminSettings from './AdminSettings';
 
 interface AdminDashboardProps {
   user: User;
@@ -35,6 +37,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
     { name: 'Appointments', path: '/admin/appointments', icon: Calendar },
     { name: 'Clients', path: '/admin/clients', icon: Users },
     { name: 'Schedule', path: '/admin/schedule', icon: Clock },
+    { name: 'Settings', path: '/admin/settings', icon: Settings },
   ];
 
   return (
@@ -73,9 +76,11 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
 
         <div className="p-4 border-t border-stone-100">
           <div className="flex items-center gap-3 px-4 py-3 mb-4">
-            <img src={user.photoURL || ''} alt="" className="w-10 h-10 rounded-full border border-stone-200" />
+            <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold border border-emerald-200">
+              {user.email?.charAt(0).toUpperCase()}
+            </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-bold text-stone-900 truncate">{user.displayName}</p>
+              <p className="text-sm font-bold text-stone-900 truncate">Admin User</p>
               <p className="text-xs text-stone-500 truncate">{user.email}</p>
             </div>
           </div>
@@ -111,6 +116,7 @@ export default function AdminDashboard({ user }: AdminDashboardProps) {
             <Route path="/appointments" element={<AdminAppointments />} />
             <Route path="/clients" element={<AdminClients />} />
             <Route path="/schedule" element={<AdminSchedule />} />
+            <Route path="/settings" element={<AdminSettings />} />
           </Routes>
         </div>
       </main>

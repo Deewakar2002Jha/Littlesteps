@@ -1,0 +1,65 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // ===============================================================
+    // Assumed Data Model
+    // ===============================================================
+    //
+    // Collection: appointments
+    // Fields: parentName, phone, email, childAge, therapyType, appointmentDate, appointmentTime, message, status, createdAt, assignedTherapistId
+    //
+    // Collection: clients
+    // Fields: parentName, phone, email, childAge, notes, appointmentHistory
+    //
+    // Collection: therapists
+    // Fields: name, specialization, availability
+    //
+    // Collection: users
+    // Fields: email, role
+    //
+    // ===============================================================
+
+    // Helper Functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() && 
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         request.auth.token.email == "deewakarjha0541@gmail.com");
+    }
+
+    function isValidAppointment(data) {
+      return data.parentName is string && data.parentName.size() > 0 && data.parentName.size() < 100 &&
+             data.phone is string && data.phone.size() > 5 && data.phone.size() < 20 &&
+             data.email is string && data.email.matches('^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$') &&
+             data.childAge is number && data.childAge >= 0 && data.childAge < 20 &&
+             data.therapyType is string &&
+             data.status in ['pending', 'approved', 'rejected', 'completed', 'rescheduled'];
+    }
+
+    // Appointments: Public can create, Admin can read/write
+    match /appointments/{appointmentId} {
+      allow create: if isValidAppointment(request.resource.data);
+      allow read, update, delete: if isAdmin();
+    }
+
+    // Clients: Admin only
+    match /clients/{clientId} {
+      allow read, write: if isAdmin();
+    }
+
+    // Therapists: Admin only
+    match /therapists/{therapistId} {
+      allow read: if true; // Public can see therapists? Maybe just admin for now.
+      allow write: if isAdmin();
+    }
+
+    // Users: Admin only
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow write: if isAdmin();
+    }
+  }
+}

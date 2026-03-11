@@ -1,0 +1,12 @@
+export { default as Home } from './Home';
+export { default as About } from './About';
+export { default as Services } from './Services';
+export { default as Conditions } from './Conditions';
+export { default as Blog } from './Blog';
+export { default as BookAppointment } from './BookAppointment';
+export { default as Contact } from './Contact';
+export { default as AdminDashboard } from './admin/AdminDashboard';
+export { default as AdminLogin } from './admin/AdminLogin';
+export { default as AdminAppointments } from './admin/AdminAppointments';
+export { default as AdminClients } from './admin/AdminClients';
+export { default as AdminSchedule } from './admin/AdminSchedule';

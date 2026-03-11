@@ -1,0 +1,76 @@
+{
+  "entities": {
+    "Appointment": {
+      "title": "Appointment",
+      "description": "A therapy consultation booking request.",
+      "type": "object",
+      "properties": {
+        "parentName": { "type": "string", "description": "Name of the parent" },
+        "phone": { "type": "string", "description": "Contact phone number" },
+        "email": { "type": "string", "description": "Contact email address" },
+        "childAge": { "type": "number", "description": "Age of the child" },
+        "therapyType": { "type": "string", "description": "Type of therapy requested" },
+        "appointmentDate": { "type": "string", "format": "date", "description": "Preferred date for appointment" },
+        "appointmentTime": { "type": "string", "description": "Preferred time for appointment" },
+        "message": { "type": "string", "description": "Additional message from parent" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "completed", "rescheduled"], "description": "Current status of the appointment" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Timestamp when the appointment was created" },
+        "assignedTherapistId": { "type": "string", "description": "ID of the assigned therapist" }
+      },
+      "required": ["parentName", "phone", "email", "childAge", "therapyType", "appointmentDate", "appointmentTime", "status", "createdAt"]
+    },
+    "Client": {
+      "title": "Client",
+      "description": "A registered client (child/parent) in the system.",
+      "type": "object",
+      "properties": {
+        "parentName": { "type": "string" },
+        "phone": { "type": "string" },
+        "email": { "type": "string" },
+        "childAge": { "type": "number" },
+        "notes": { "type": "array", "items": { "type": "object", "properties": { "text": { "type": "string" }, "createdAt": { "type": "string" } } } },
+        "appointmentHistory": { "type": "array", "items": { "type": "string" }, "description": "List of appointment IDs" }
+      },
+      "required": ["parentName", "phone", "email", "childAge"]
+    },
+    "Therapist": {
+      "title": "Therapist",
+      "description": "A therapist working at the center.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "specialization": { "type": "string" },
+        "availability": { "type": "object", "description": "Weekly availability schedule" }
+      },
+      "required": ["name", "specialization"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Admin users with dashboard access.",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "staff"] }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/appointments/{appointmentId}": {
+      "schema": "Appointment",
+      "description": "Collection of all appointment bookings"
+    },
+    "/clients/{clientId}": {
+      "schema": "Client",
+      "description": "Collection of client profiles"
+    },
+    "/therapists/{therapistId}": {
+      "schema": "Therapist",
+      "description": "Collection of therapist profiles and availability"
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of admin users"
+    }
+  }
+}
